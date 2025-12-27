@@ -41,7 +41,7 @@ def main():
     success = processor.process_latest_activity()
 
     if success:
-        logger.info("✅ Activity successfully transferred from Zwift to Runalyze!")
+        logger.info("✅ Activity successfully transferred from Zwift to Garmin!")
     else:
         logger.error("❌ Failed to transfer activity. Check the logs for details.")
         sys.exit(1)

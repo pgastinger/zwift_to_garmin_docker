@@ -1,2 +1,4 @@
 garth
 jpype1
+zwift-client
+garminconnect
