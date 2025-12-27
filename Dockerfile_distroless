@@ -1,0 +1,31 @@
+ARG SDK_VERSION=21.188.00
+
+FROM debian:12-slim AS build
+ARG SDK_VERSION
+
+RUN apt-get update && \
+    apt-get install --no-install-suggests --no-install-recommends --yes python3-venv gcc libpython3-dev curl unzip default-jdk-headless && \
+    python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip setuptools wheel
+
+RUN mkdir /garmin_sdk && cd /garmin_sdk && curl https://developer.garmin.com/downloads/fit/sdk/FitSDKRelease_${SDK_VERSION}.zip -o sdk.zip && unzip sdk.zip 
+
+FROM build AS build-venv
+COPY app/requirements.txt /requirements.txt
+RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
+
+FROM gcr.io/distroless/python3-debian12:nonroot
+
+COPY --from=build-venv /venv /venv
+COPY --from=build-venv /usr/lib/jvm /usr/lib/jvm
+COPY --from=build-venv /garmin_sdk/java /venv
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/venv/bin:$PATH"
+
+COPY app /app
+WORKDIR /app
+
+ENTRYPOINT ["python"]
+CMD ["main.py"]

@@ -1,0 +1,14 @@
+services:
+  zwift_to_garmin:
+    build: 
+      dockerfile: Dockerfile_distroless
+    image: zwift_to_garmin:latest
+    container_name: zwift_to_garmin
+    environment:
+      - TZ=Europe/Vienna
+      - GARMIN_PASSWORD=${GARMIN_PASSWORD}
+      - GARMIN_USERNAME=${GARMIN_USERNAME}
+      - ZWIFT_USERNAME=${ZWIFT_USERNAME}
+      - ZWIFT_PASSWORD=${ZWIFT_PASSWORD}
+    volumes:
+      - ./data:/app/data
