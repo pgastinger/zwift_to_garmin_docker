@@ -15,6 +15,7 @@ RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 ENV PATH="/venv/bin:$PATH"
 
 COPY app /app
