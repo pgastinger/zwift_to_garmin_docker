@@ -3,11 +3,16 @@
 import sys
 import os
 import logging
+import uvicorn
 
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from services.zwift_service import ZwiftService
 from services.fit_file_service import FitFileService
 from services.garmin_service import GarminService
 from services.activity_processor import ActivityProcessor
+
+app = FastAPI()
 
 # Configure logging
 logging.basicConfig(
@@ -15,7 +20,8 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
-def main():
+@app.get("/sync_latest/")
+def sync_latest():
     """Main function to orchestrate the activity transfer process."""
     # Load environment variables from .env file
     logger = logging.getLogger(__name__)
@@ -41,10 +47,15 @@ def main():
     success = processor.process_latest_activity()
 
     if success:
-        logger.info("✅ Activity successfully transferred from Zwift to Garmin!")
+        return {"success": "Activity successfully transferred from Zwift to Garmin"}
     else:
-        logger.error("❌ Failed to transfer activity. Check the logs for details.")
-        sys.exit(1)
+        return {"failed": "Failed to transfer activity. Check the logs for details."}  
 
+
+@app.get("/", include_in_schema=False)
+def index():
+    return RedirectResponse(url="/docs")    
+
+# This block tells Python what to do when the script is run directly
 if __name__ == "__main__":
-    main()
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

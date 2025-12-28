@@ -20,5 +20,5 @@ ENV PATH="/venv/bin:$PATH"
 COPY app /app
 WORKDIR /app
 
-#ENTRYPOINT ["python"]
-#CMD ["main.py"]
+ENTRYPOINT ["python"]
+CMD ["main.py"]
