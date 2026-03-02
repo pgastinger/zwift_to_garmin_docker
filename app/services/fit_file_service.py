@@ -24,7 +24,9 @@ class FitFileService:
         if not os.path.exists(jar_path):
             raise FileNotFoundError(f"Could not find JAR at {jar_path}")
 
-        jpype.startJVM(classpath=[jar_path])
+        # only start the JVM if it isn't already running; jpype throws an error otherwise
+        if not jpype.isJVMStarted():
+            jpype.startJVM(classpath=[jar_path])
         self.fit_csv_tool = jpype.JClass("com.garmin.fit.csv.CSVTool")
 
 
