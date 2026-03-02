@@ -1,4 +1,4 @@
-ARG SDK_VERSION=21.195.0
+ARG SDK_VERSION=21.188.0
 
 FROM debian:12-slim AS build
 ARG SDK_VERSION
@@ -8,8 +8,10 @@ RUN apt-get update && \
     python3 -m venv /venv && \
     /venv/bin/pip install --upgrade pip setuptools wheel
 
-# RUN mkdir /garmin_sdk && cd /garmin_sdk && curl https://developer.garmin.com/downloads/fit/sdk/FitSDKRelease_${SDK_VERSION}.zip -o sdk.zip && unzip sdk.zip 
-RUN mkdir /garmin_sdk && cd /garmin_sdk && curl https://github.com/garmin/fit-sdk-tools/releases/download/${SDK_VERSION}/FitCSVTool.jar -o FitCSVTool.jar
+RUN mkdir /garmin_sdk && cd /garmin_sdk && curl https://developer.garmin.com/downloads/fit/sdk/FitSDKRelease_${SDK_VERSION}.zip -o sdk.zip && unzip sdk.zip 
+
+# Not everything included apparently, but at least the CSV tool which is needed for the conversion of FIT files to CSV
+# RUN mkdir /garmin_sdk && cd /garmin_sdk && curl https://github.com/garmin/fit-sdk-tools/releases/download/${SDK_VERSION}/FitCSVTool.jar -o FitCSVTool.jar
 # https://github.com/garmin/fit-sdk-tools/releases/download/21.195.0/FitCSVTool.jar
 
 FROM build AS build-venv
