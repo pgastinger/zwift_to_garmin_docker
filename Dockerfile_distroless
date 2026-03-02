@@ -1,4 +1,4 @@
-ARG SDK_VERSION=21.188.0
+ARG SDK_VERSION=21.188.00
 
 FROM debian:12-slim AS build
 ARG SDK_VERSION
@@ -22,7 +22,7 @@ FROM gcr.io/distroless/python3-debian12:nonroot
 
 COPY --from=build-venv /venv /venv
 COPY --from=build-venv /usr/lib/jvm /usr/lib/jvm
-COPY --from=build-venv /garmin_sdk /venv
+COPY --from=build-venv /garmin_sdk/java /venv
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
